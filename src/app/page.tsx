@@ -1,6 +1,5 @@
 "use client";
 
-// Marca este componente como um Client Component
 import { ProductCard } from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,7 +8,6 @@ import { Search, Filter } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
-// Mock data para demonstração (geralmente viria de uma API em um projeto real)
 const mockProducts: Product[] = [
   {
     id: "1",
@@ -67,7 +65,6 @@ const mockProducts: Product[] = [
   },
 ];
 
-
 export default function HomePage() {
   const [products, setProducts] = useState<Product[]>(mockProducts);
   const [filteredProducts, setFilteredProducts] =
@@ -115,7 +112,6 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
       <section className="bg-gradient-brand text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-fade-in">

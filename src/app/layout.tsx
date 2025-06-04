@@ -24,11 +24,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="">
-      <Header />
+    <html lang="pt-BR"
+      suppresshydrationwarning="true"
+-                       data-lt-installed="true"
+    >
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Header />
 
         {children}
       </body>
