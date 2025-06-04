@@ -1,104 +1,91 @@
-"use client";
 
-// Marca este componente como um Client Component
-import { ProductCard } from "@/components/ProductCard";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Product } from "@/types";
-import { Search, Filter } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
+import { Search, Filter } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { ProductCard } from '@/components/ProductCard';
+import { Product } from '@/types';
+import { useNavigate } from 'react-router-dom';
 
-// Mock data para demonstração (geralmente viria de uma API em um projeto real)
+// Mock data para demonstração
 const mockProducts: Product[] = [
   {
-    id: "1",
+    id: '1',
     name: 'MacBook Pro 16"',
-    description: "Laptop profissional com chip M2 Pro, 16GB RAM e 512GB SSD",
+    description: 'Laptop profissional com chip M2 Pro, 16GB RAM e 512GB SSD',
     price: 12999.99,
-    image:
-      "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=400&fit=crop",
-    category: "Eletrônicos",
+    image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=400&fit=crop',
+    category: 'Eletrônicos'
   },
   {
-    id: "2",
-    name: "iPhone 15 Pro",
-    description: "Smartphone premium com câmera profissional e chip A17 Pro",
+    id: '2',
+    name: 'iPhone 15 Pro',
+    description: 'Smartphone premium com câmera profissional e chip A17 Pro',
     price: 8999.99,
-    image:
-      "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400&h=400&fit=crop",
-    category: "Eletrônicos",
+    image: 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400&h=400&fit=crop',
+    category: 'Eletrônicos'
   },
   {
-    id: "3",
-    name: "Cadeira Ergonômica",
-    description: "Cadeira de escritório premium com suporte lombar ajustável",
+    id: '3',
+    name: 'Cadeira Ergonômica',
+    description: 'Cadeira de escritório premium com suporte lombar ajustável',
     price: 1299.99,
-    image:
-      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop",
-    category: "Móveis",
+    image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop',
+    category: 'Móveis'
   },
   {
-    id: "4",
-    name: "Fones Bluetooth Premium",
-    description: "Fones over-ear com cancelamento ativo de ruído",
+    id: '4',
+    name: 'Fones Bluetooth Premium',
+    description: 'Fones over-ear com cancelamento ativo de ruído',
     price: 899.99,
-    image:
-      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop",
-    category: "Eletrônicos",
+    image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop',
+    category: 'Eletrônicos'
   },
   {
-    id: "5",
-    name: "Mesa Gamer RGB",
-    description: "Mesa para setup gamer com iluminação RGB personalizável",
+    id: '5',
+    name: 'Mesa Gamer RGB',
+    description: 'Mesa para setup gamer com iluminação RGB personalizável',
     price: 799.99,
-    image:
-      "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=400&fit=crop",
-    category: "Móveis",
+    image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=400&fit=crop',
+    category: 'Móveis'
   },
   {
-    id: "6",
+    id: '6',
     name: 'Monitor 4K 27"',
-    description: "Monitor profissional com resolução 4K e calibração de cor",
+    description: 'Monitor profissional com resolução 4K e calibração de cor',
     price: 2199.99,
-    image:
-      "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400&h=400&fit=crop",
-    category: "Eletrônicos",
-  },
+    image: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400&h=400&fit=crop',
+    category: 'Eletrônicos'
+  }
 ];
 
-
-export default function HomePage() {
+export const Home = () => {
   const [products, setProducts] = useState<Product[]>(mockProducts);
-  const [filteredProducts, setFilteredProducts] =
-    useState<Product[]>(mockProducts);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [priceFilter, setPriceFilter] = useState<
-    "all" | "low" | "medium" | "high"
-  >("all");
-  const router = useRouter();
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>(mockProducts);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [priceFilter, setPriceFilter] = useState<'all' | 'low' | 'medium' | 'high'>('all');
+  const navigate = useNavigate();
 
   useEffect(() => {
     let filtered = products;
 
     // Filtro por nome
     if (searchTerm) {
-      filtered = filtered.filter(
-        (product) =>
-          product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          product.description.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = filtered.filter(product =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.description.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     // Filtro por preço
-    if (priceFilter !== "all") {
-      filtered = filtered.filter((product) => {
+    if (priceFilter !== 'all') {
+      filtered = filtered.filter(product => {
         switch (priceFilter) {
-          case "low":
+          case 'low':
             return product.price < 1000;
-          case "medium":
+          case 'medium':
             return product.price >= 1000 && product.price < 5000;
-          case "high":
+          case 'high':
             return product.price >= 5000;
           default:
             return true;
@@ -110,7 +97,7 @@ export default function HomePage() {
   }, [products, searchTerm, priceFilter]);
 
   const handleProductClick = (productId: string) => {
-    router.push(`/product/${productId}`);
+    navigate(`/product/${productId}`);
   };
 
   return (
@@ -127,14 +114,10 @@ export default function HomePage() {
           <p className="text-xl md:text-2xl mb-8 opacity-90 max-w-3xl mx-auto">
             Descubra produtos incríveis com qualidade garantida e entrega rápida
           </p>
-          <Button
-            size="lg"
+          <Button 
+            size="lg" 
             className="bg-white text-brand-600 hover:bg-gray-100 text-lg px-8 py-3"
-            onClick={() =>
-              document
-                .getElementById("products")
-                ?.scrollIntoView({ behavior: "smooth" })
-            }
+            onClick={() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })}
           >
             Ver Produtos
           </Button>
@@ -149,8 +132,7 @@ export default function HomePage() {
               Nossos Produtos
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Encontre exatamente o que você precisa em nossa seleção
-              cuidadosamente curada
+              Encontre exatamente o que você precisa em nossa seleção cuidadosamente curada
             </p>
           </div>
 
@@ -165,12 +147,11 @@ export default function HomePage() {
                 className="pl-10"
               />
             </div>
-
+            
             <div className="flex items-center gap-2">
               <Filter className="h-4 w-4 text-gray-600" />
               <select
                 value={priceFilter}
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 onChange={(e) => setPriceFilter(e.target.value as any)}
                 className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
               >
@@ -204,4 +185,4 @@ export default function HomePage() {
       </section>
     </div>
   );
-}
+};
