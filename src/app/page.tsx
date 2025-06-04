@@ -1,103 +1,189 @@
-import Image from "next/image";
+"use client"
+import { useState, useEffect } from 'react';
+import { Search, Filter } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { ProductCard } from '@/components/ui/ProductCard';
+import { Product } from '@/types';
+import { useRouter } from 'next/navigation';
 
-export default function Home() {
+// Mock data para demonstração
+const mockProducts: Product[] = [
+  {
+    id: '1',
+    name: 'MacBook Pro 16"',
+    description: 'Laptop profissional com chip M2 Pro, 16GB RAM e 512GB SSD',
+    price: 12999.99,
+    image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=400&fit=crop',
+    category: 'Eletrônicos'
+  },
+  {
+    id: '2',
+    name: 'iPhone 15 Pro',
+    description: 'Smartphone premium com câmera profissional e chip A17 Pro',
+    price: 8999.99,
+    image: 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400&h=400&fit=crop',
+    category: 'Eletrônicos'
+  },
+  {
+    id: '3',
+    name: 'Cadeira Ergonômica',
+    description: 'Cadeira de escritório premium com suporte lombar ajustável',
+    price: 1299.99,
+    image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop',
+    category: 'Móveis'
+  },
+  {
+    id: '4',
+    name: 'Fones Bluetooth Premium',
+    description: 'Fones over-ear com cancelamento ativo de ruído',
+    price: 899.99,
+    image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop',
+    category: 'Eletrônicos'
+  },
+  {
+    id: '5',
+    name: 'Mesa Gamer RGB',
+    description: 'Mesa para setup gamer com iluminação RGB personalizável',
+    price: 799.99,
+    image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=400&fit=crop',
+    category: 'Móveis'
+  },
+  {
+    id: '6',
+    name: 'Monitor 4K 27"',
+    description: 'Monitor profissional com resolução 4K e calibração de cor',
+    price: 2199.99,
+    image: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400&h=400&fit=crop',
+    category: 'Eletrônicos'
+  }
+];
+
+export const Home = () => {
+  const [products, setProducts] = useState<Product[]>(mockProducts);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>(mockProducts);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [priceFilter, setPriceFilter] = useState<'all' | 'low' | 'medium' | 'high'>('all');
+  const router = useRouter();
+
+  useEffect(() => {
+    let filtered = products;
+
+    // Filtro por nome
+    if (searchTerm) {
+      filtered = filtered.filter(product =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.description.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Filtro por preço
+    if (priceFilter !== 'all') {
+      filtered = filtered.filter(product => {
+        switch (priceFilter) {
+          case 'low':
+            return product.price < 1000;
+          case 'medium':
+            return product.price >= 1000 && product.price < 5000;
+          case 'high':
+            return product.price >= 5000;
+          default:
+            return true;
+        }
+      });
+    }
+
+    setFilteredProducts(filtered);
+  }, [products, searchTerm, priceFilter]);
+
+  const handleProductClick = (productId: string) => {
+    router.push(`/product/${productId}`);
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li> 
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <section className="bg-gradient-brand text-white py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-fade-in">
+            Sua Loja Online
+            <span className="block text-xl md:text-2xl font-normal mt-2 opacity-90">
+              Os melhores produtos com a melhor experiência
+            </span>
+          </h1>
+          <p className="text-xl md:text-2xl mb-8 opacity-90 max-w-3xl mx-auto">
+            Descubra produtos incríveis com qualidade garantida e entrega rápida
+          </p>
+          <Button 
+            size="lg" 
+            className="bg-white text-brand-600 hover:bg-gray-100 text-lg px-8 py-3"
+            onClick={() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            Ver Produtos
+          </Button>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </section>
+
+      {/* Products Section */}
+      <section id="products" className="py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Nossos Produtos
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Encontre exatamente o que você precisa em nossa seleção cuidadosamente curada
+            </p>
+          </div>
+
+          {/* Filters */}
+          <div className="mb-8 flex flex-col sm:flex-row gap-4 items-center justify-between">
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input
+                placeholder="Buscar produtos..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <Filter className="h-4 w-4 text-gray-600" />
+              <select
+                value={priceFilter}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                onChange={(e) => setPriceFilter(e.target.value as any)}
+                className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+              >
+                <option value="all">Todos os preços</option>
+                <option value="low">Até R$ 1.000</option>
+                <option value="medium">R$ 1.000 - R$ 5.000</option>
+                <option value="high">Acima de R$ 5.000</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Products Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredProducts.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onClick={() => handleProductClick(product.id)}
+              />
+            ))}
+          </div>
+
+          {filteredProducts.length === 0 && (
+            <div className="text-center py-16">
+              <p className="text-lg text-gray-600">
+                Nenhum produto encontrado com os filtros aplicados.
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
     </div>
   );
-}
+};
