@@ -10,7 +10,7 @@ import { Product } from '@/types';
 import { useAuthStore } from '@/store/authStore';
 import { toast } from '@/hooks/use-toast';
 
-// Mock data inicial
+
 const initialProducts: Product[] = [
   {
     id: '1',
@@ -35,7 +35,7 @@ export const AdminDashboard = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   
-  // Form states
+ 
   const [productForm, setProductForm] = useState({
     name: '',
     description: '',
@@ -196,7 +196,7 @@ export const AdminDashboard = () => {
           </Card>
         </div>
 
-        {/* Products Management */}
+      
         <Card className="border-0 shadow-sm">
           <CardHeader>
             <div className="flex items-center justify-between">

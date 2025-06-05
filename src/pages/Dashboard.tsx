@@ -6,7 +6,7 @@ import { useAuthStore } from '@/store/authStore';
 export const Dashboard = () => {
   const { user } = useAuthStore();
 
-  // Mock data para demonstração
+  
   const orders = [
     {
       id: '1',
