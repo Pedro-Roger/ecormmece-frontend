@@ -90,7 +90,7 @@ export default function Header() {
                     Entrar
                   </Button>
                 </Link>
-                <Link href="/register">
+                <Link href="/signup">
                   <Button
                     size="sm"
                     className="bg-blue-500 hover:bg-blue-600 text-white"

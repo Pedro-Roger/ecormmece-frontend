@@ -25,8 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR"
-      suppresshydrationwarning="true"
--                       data-lt-installed="true"
+      
     >
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

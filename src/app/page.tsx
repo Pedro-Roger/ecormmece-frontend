@@ -78,7 +78,7 @@ export default function HomePage() {
   useEffect(() => {
     let filtered = products;
 
-    // Filtro por nome
+    
     if (searchTerm) {
       filtered = filtered.filter(
         (product) =>
@@ -87,7 +87,7 @@ export default function HomePage() {
       );
     }
 
-    // Filtro por preço
+    
     if (priceFilter !== "all") {
       filtered = filtered.filter((product) => {
         switch (priceFilter) {
@@ -111,8 +111,8 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <section className="bg-gradient-brand text-white py-20">
+    <div className="min-h-screen bg-cyan-50">
+      <section className="bg-sky-950 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-fade-in">
             Sua Loja Online
@@ -125,7 +125,7 @@ export default function HomePage() {
           </p>
           <Button
             size="lg"
-            className="bg-white text-brand-600 hover:bg-gray-100 text-lg px-8 py-3"
+            className="bg-zinc-700 text-brand-600 hover:bg-gray-100 text-lg px-8 py-3"
             onClick={() =>
               document
                 .getElementById("products")
@@ -137,7 +137,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Products Section */}
       <section id="products" className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -150,7 +149,7 @@ export default function HomePage() {
             </p>
           </div>
 
-          {/* Filters */}
+       
           <div className="mb-8 flex flex-col sm:flex-row gap-4 items-center justify-between">
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
@@ -162,23 +161,29 @@ export default function HomePage() {
               />
             </div>
 
-            <div className="flex items-center gap-2">
-              <Filter className="h-4 w-4 text-gray-600" />
-              <select
-                value={priceFilter}
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                onChange={(e) => setPriceFilter(e.target.value as any)}
-                className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
-              >
-                <option value="all">Todos os preços</option>
-                <option value="low">Até R$ 1.000</option>
-                <option value="medium">R$ 1.000 - R$ 5.000</option>
-                <option value="high">Acima de R$ 5.000</option>
-              </select>
-            </div>
+           <div className="flex items-center gap-2">
+  <Filter className="h-5 w-5 text-brand-500" />
+  <select
+    value={priceFilter}
+   
+    onChange={(e) => setPriceFilter(e.target.value as any)}
+    className="
+      appearance-none border border-gray-300 rounded-lg 
+      px-4 py-2 text-base text-gray-700 
+      focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent
+      hover:border-brand-400 transition duration-200 ease-in-out
+      shadow-sm
+    "
+  >
+    <option value="all">Todos os preços</option>
+    <option value="low">Até R$ 1.000</option>
+    <option value="medium">R$ 1.000 - R$ 5.000</option>
+    <option value="high">Acima de R$ 5.000</option>
+  </select>
+</div>
           </div>
 
-          {/* Products Grid */}
+         
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filteredProducts.map((product) => (
               <ProductCard
