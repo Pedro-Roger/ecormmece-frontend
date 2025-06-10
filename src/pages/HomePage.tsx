@@ -7,83 +7,42 @@ import { Product } from "@/types";
 import { Search, Filter } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { useAuthStore } from "@/store/authStore"; 
-
-const mockProducts: Product[] = [
-  {
-    id: "1",
-    name: 'MacBook Pro 16"',
-    description: "Laptop profissional com chip M2 Pro, 16GB RAM e 512GB SSD",
-    price: 12999.99,
-    image:
-      "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=400&fit=crop",
-    category: "Eletrônicos",
-  },
-  {
-    id: "2",
-    name: "iPhone 15 Pro",
-    description: "Smartphone premium com câmera profissional e chip A17 Pro",
-    price: 8999.99,
-    image:
-      "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400&h=400&fit=crop",
-    category: "Eletrônicos",
-  },
-  {
-    id: "3",
-    name: "Cadeira Ergonômica",
-    description: "Cadeira de escritório premium com suporte lombar ajustável",
-    price: 1299.99,
-    image:
-      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop",
-    category: "Móveis",
-  },
-  {
-    id: "4",
-    name: "Fones Bluetooth Premium",
-    description: "Fones over-ear com cancelamento ativo de ruído",
-    price: 899.99,
-    image:
-      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop",
-    category: "Eletrônicos",
-  },
-  {
-    id: "5",
-    name: "Mesa Gamer RGB",
-    description: "Mesa para setup gamer com iluminação RGB personalizável",
-    price: 799.99,
-    image:
-      "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=400&fit=crop",
-    category: "Móveis",
-  },
-  {
-    id: "6",
-    name: 'Monitor 4K 27"',
-    description: "Monitor profissional com resolução 4K e calibração de cor",
-    price: 2199.99,
-    image:
-      "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400&h=400&fit=crop",
-    category: "Eletrônicos",
-  },
-];
+import { useAuthStore } from "@/store/authStore";
 
 export default function HomePage() {
-  const [products, setProducts] = useState<Product[]>(mockProducts);
-  const [filteredProducts, setFilteredProducts] =
-    useState<Product[]>(mockProducts);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [priceFilter, setPriceFilter] = useState<
-    "all" | "low" | "medium" | "high"
-  >("all");
+  const [priceFilter, setPriceFilter] = useState<"all" | "low" | "medium" | "high">("all");
   const router = useRouter();
-  const { user } = useAuthStore(); 
+  const { user, loading } = useAuthStore();
 
- 
+useEffect(() => {
+  if (loading) return; 
+
+  if (!user) {
+    router.push("/login");
+  } else if (user.isAdmin) {
+    router.push("/admin-dashboard");
+  }
+}, [user, loading, router]);
+
+  
   useEffect(() => {
-    
-    if (user && user.isAdmin) {
-      router.push("/admin-dashboard"); 
+    async function fetchProducts() {
+      try {
+        const res = await fetch("http://localhost:3001/product"); 
+        if (!res.ok) throw new Error("Erro ao carregar produtos");
+        const data: Product[] = await res.json();
+        setProducts(data);
+        setFilteredProducts(data);
+      } catch (error) {
+        console.error(error);
+      }
     }
-  }, [user, router]); 
+    fetchProducts();
+  }, []);
+
 
   useEffect(() => {
     let filtered = products;

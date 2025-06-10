@@ -1,14 +1,15 @@
-
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import { User } from '@/types';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import { User } from "@/types";
 
 interface AuthState {
   user: User | null;
   token: string | null;
   isAuthenticated: boolean;
+  loading: boolean; 
   login: (token: string, user: User) => void;
   logout: () => void;
+  setLoading: (loading: boolean) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -17,17 +18,22 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       token: null,
       isAuthenticated: false,
+      loading: true, 
       login: (token: string, user: User) => {
-        localStorage.setItem('token', token);
         set({ user, token, isAuthenticated: true });
       },
       logout: () => {
-        localStorage.removeItem('token');
         set({ user: null, token: null, isAuthenticated: false });
       },
+      setLoading: (loading: boolean) => set({ loading }),
     }),
     {
-      name: 'auth-storage',
+      name: "auth-storage",
+      onRehydrateStorage: () => (state) => {
+        if (state) {
+          state.setLoading(false);
+        }
+      },
     }
   )
 );
