@@ -32,7 +32,7 @@ const handleLogin = async () => {
     login(data.access_token, data.user);
 
     if (data.user.isAdmin) {
-      router.push("/admin"); // 
+      router.push("/"); // 
     } else {
       router.push("/");
     }
